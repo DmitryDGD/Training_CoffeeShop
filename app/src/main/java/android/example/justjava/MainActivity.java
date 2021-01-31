@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
     int numberOfCoffees = 1;
     int price = 5;
+    int whippedCreamPrice = 1;
+    int chocolatePrice = 2;
     String priceMessage;
     String newMessage;
 
@@ -74,16 +77,29 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void increment(View view) {
-        numberOfCoffees++;
-        price = numberOfCoffees * 5;
-        TextView NewTextView3 = (TextView) findViewById(R.id.new_text_view);
+        if (numberOfCoffees < 100) {
+            numberOfCoffees++;
+            price = numberOfCoffees * 5;
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "You cannot have more than 100 coffee", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+            TextView NewTextView3 = (TextView) findViewById(R.id.new_text_view);
         NewTextView3.setVisibility(View.INVISIBLE);
         displayQuantity(numberOfCoffees);
         displayPrice(price);
     }
 
     public void decrement(View view) {
-        if (numberOfCoffees > 1) { numberOfCoffees--; price = numberOfCoffees * 5;;} else {  }
+        if (numberOfCoffees > 1) {
+            numberOfCoffees--;
+            price = numberOfCoffees * 5;
+        } else {
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "You cannot have less than 1 coffee", Toast.LENGTH_SHORT);
+            toast.show();
+        }
         TextView NewTextView3 = (TextView) findViewById(R.id.new_text_view);
         NewTextView3.setVisibility(View.INVISIBLE);
         displayQuantity(numberOfCoffees);
@@ -91,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
    private String createOrderSummary(int price) {
+       if (((CheckBox)findViewById(R.id.whipped_cream_checkbox)).isChecked()) {
+           price += (whippedCreamPrice * numberOfCoffees);
+       }
+
+       if (((CheckBox) findViewById(R.id.chocolate_topping_checkbox)).isChecked()) {
+           price += (chocolatePrice * numberOfCoffees);
+       }
+
         return "Name: " + ((EditText)findViewById(R.id.editTextTextPersonName)).getText()
                 + "\n" + "Add whipped cream? " + ((CheckBox)findViewById(R.id.whipped_cream_checkbox)).isChecked()
                 + "\n" + "Add chocolate topping? " + ((CheckBox) findViewById(R.id.chocolate_topping_checkbox)).isChecked()
