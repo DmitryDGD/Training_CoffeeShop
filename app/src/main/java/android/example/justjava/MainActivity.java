@@ -1,5 +1,7 @@
 package android.example.justjava;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.CheckBox;
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         displayPrice(price);
     }
 
-   private String createOrderSummary(int price) {
+   public String createOrderSummary(int price) {
        if (((CheckBox)findViewById(R.id.whipped_cream_checkbox)).isChecked()) {
            price += (whippedCreamPrice * numberOfCoffees);
        }
@@ -124,9 +126,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createOrderSummary(View view) {
-        TextView order_summary_text_view = (TextView)findViewById(R.id.order_summary_text_view);
-        order_summary_text_view.setText(createOrderSummary(price));
+        String message = (createOrderSummary(price));
+        Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:email@gmail.com"));
+        intent.putExtra(Intent.EXTRA_TEXT, message);
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
     }
+
+
 
 
 }
